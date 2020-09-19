@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ExpenseApi.Models;
+using System;
+using System.Net;
 
 namespace ExpenseApi.Controllers
 {
-    [Route("api/expenses")]
+    [Route("api/v1/expenses")]
     [ApiController]
     public class ExpensesController : ControllerBase
     {
@@ -15,14 +17,17 @@ namespace ExpenseApi.Controllers
 
         public ExpensesController(ExpenseContext context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));;
         }
 
-        // GET: api/Expenses
+        // GET: api/v1/expenses
         [HttpGet]
+        [Route("expenses")]
+        [ProducesResponseType(typeof(IEnumerable<Expense>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses()
         {
-            return await _context.Expenses.ToListAsync();
+            var items = await _context.Expenses.ToListAsync();
+            return Ok(items);
         }
 
         // GET: api/Expenses/5
@@ -39,7 +44,7 @@ namespace ExpenseApi.Controllers
             return expense;
         }
 
-        // PUT: api/Expenses/5
+        // PUT: api/v1/expenses/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutExpense(long id, Expense expense)
         {
@@ -69,7 +74,7 @@ namespace ExpenseApi.Controllers
             return NoContent();
         }
 
-        // POST: api/Expenses
+        // POST: api/v1/expenses
         [HttpPost]
         public async Task<ActionResult<Expense>> PostExpense(Expense expense)
         {
@@ -79,7 +84,7 @@ namespace ExpenseApi.Controllers
             return CreatedAtAction(nameof(GetExpense), new { id = expense.Id }, expense);
         }
 
-        // DELETE: api/Expenses/5
+        // DELETE: api/v1/expenses/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Expense>> DeleteExpense(long id)
         {
