@@ -31,6 +31,8 @@ namespace ExpenseApi.Controllers
 
         // GET: api/Expenses/5
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Expense), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<Expense>> GetExpense(long id)
         {
             var expense = await _context.Expenses.FindAsync(id);
@@ -40,11 +42,14 @@ namespace ExpenseApi.Controllers
                 return NotFound();
             }
 
-            return expense;
+            return Ok(expense);
         }
 
         // PUT: api/v1/expenses/5
         [HttpPut("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> PutExpense(long id, Expense expense)
         {
             if (id != expense.Id)
@@ -75,6 +80,7 @@ namespace ExpenseApi.Controllers
 
         // POST: api/v1/expenses
         [HttpPost]
+        [ProducesResponseType(typeof(Expense), (int)HttpStatusCode.Created)]
         public async Task<ActionResult<Expense>> PostExpense(Expense expense)
         {
             _context.Expenses.Add(expense);
@@ -85,6 +91,8 @@ namespace ExpenseApi.Controllers
 
         // DELETE: api/v1/expenses/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(Expense), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<Expense>> DeleteExpense(long id)
         {
             var expense = await _context.Expenses.FindAsync(id);
@@ -96,7 +104,7 @@ namespace ExpenseApi.Controllers
             _context.Expenses.Remove(expense);
             await _context.SaveChangesAsync();
 
-            return expense;
+            return Ok(expense);
         }
 
         private bool ExpenseExists(long id)
