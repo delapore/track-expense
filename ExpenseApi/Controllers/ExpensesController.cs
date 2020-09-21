@@ -22,7 +22,6 @@ namespace ExpenseApi.Controllers
 
         // GET: api/v1/expenses
         [HttpGet]
-        [Route("expenses")]
         [ProducesResponseType(typeof(IEnumerable<Expense>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses()
         {

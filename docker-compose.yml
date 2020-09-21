@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  expenseapi:
+    image: expenseapi
+    build:
+      context: .
+      dockerfile: ExpenseApi/Dockerfile
+    environment:
+      - ConnectionString=Server=sqldata;Initial Catalog=ExpenseDb;User Id=sa;Password=Pass@word
+    ports:
+      - 5000:5000
+  sqldata:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "5434:1433"
