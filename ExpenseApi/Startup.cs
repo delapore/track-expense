@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace ExpenseApi
 {
@@ -21,11 +22,25 @@ namespace ExpenseApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ExpenseContext>(c => c.UseSqlServer(Configuration["ConnectionString"]));
+            services.AddDbContext<ExpenseContext>(c =>
+            {
+                c.UseSqlServer(Configuration["ConnectionString"]);
+            });
 
-            services
-                .AddControllers()
-                .AddJsonOptions(opts => { opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
+            services.AddSwaggerGen(sg =>
+            {
+                sg.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "trackExpense - Expense HTTP API",
+                    Version = "v1",
+                    Description = "Expense Data-Driven Microservice HTTP API."
+                });
+            });
+
+            services.AddControllers().AddJsonOptions(opts =>
+            {
+                opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +60,11 @@ namespace ExpenseApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger().UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
         }
     }
