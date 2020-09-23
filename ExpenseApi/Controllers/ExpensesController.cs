@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ExpenseApi.Models;
 using System;
 using System.Net;
+using ExpenseApi.Repository;
 
 namespace ExpenseApi.Controllers
 {
@@ -13,11 +13,11 @@ namespace ExpenseApi.Controllers
     [ApiController]
     public class ExpensesController : ControllerBase
     {
-        private readonly ExpenseContext _context;
+        private readonly IExpenseRepository _repository;
 
-        public ExpensesController(ExpenseContext context)
+        public ExpensesController(IExpenseRepository repository)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));;
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));;
         }
 
         // GET: api/v1/expenses
@@ -25,7 +25,7 @@ namespace ExpenseApi.Controllers
         [ProducesResponseType(typeof(IEnumerable<Expense>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses()
         {
-            var items = await _context.Expenses.ToListAsync();
+            var items = await _repository.GetExpensesAsync();
             return Ok(items);
         }
 
@@ -35,7 +35,7 @@ namespace ExpenseApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<Expense>> GetExpense(long id)
         {
-            var expense = await _context.Expenses.FindAsync(id);
+            var expense = await _repository.GetExpenseByIdAsync(id);
 
             if (expense == null)
             {
@@ -57,15 +57,13 @@ namespace ExpenseApi.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(expense).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _repository.UpdateExpenseAsync(expense);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ExpenseExists(id))
+                if (!_repository.ExpenseExists(id))
                 {
                     return NotFound();
                 }
@@ -83,9 +81,7 @@ namespace ExpenseApi.Controllers
         [ProducesResponseType(typeof(Expense), (int)HttpStatusCode.Created)]
         public async Task<ActionResult<Expense>> PostExpense(Expense expense)
         {
-            _context.Expenses.Add(expense);
-            await _context.SaveChangesAsync();
-
+            await _repository.InsertExpenseAsync(expense);
             return CreatedAtAction(nameof(GetExpense), new { id = expense.Id }, expense);
         }
 
@@ -95,21 +91,15 @@ namespace ExpenseApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<Expense>> DeleteExpense(long id)
         {
-            var expense = await _context.Expenses.FindAsync(id);
+            var expense = await _repository.GetExpenseByIdAsync(id);
             if (expense == null)
             {
                 return NotFound();
             }
 
-            _context.Expenses.Remove(expense);
-            await _context.SaveChangesAsync();
+            await _repository.DeleteExpenseAsync(expense);
 
             return Ok(expense);
-        }
-
-        private bool ExpenseExists(long id)
-        {
-            return _context.Expenses.Any(e => e.Id == id);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using ExpenseApi.Models;
+using ExpenseApi.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,8 @@ namespace ExpenseApi
             {
                 c.UseSqlServer(Configuration["ConnectionString"]);
             });
+
+            services.AddTransient<IExpenseRepository, ExpenseRepository>();
 
             services.AddSwaggerGen(sg =>
             {
