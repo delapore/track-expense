@@ -37,6 +37,8 @@ namespace ExpenseApi
                 });
             });
 
+            services.AddCors();
+
             services.AddControllers().AddJsonOptions(opts =>
             {
                 opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -55,6 +57,12 @@ namespace ExpenseApi
 
             app.UseRouting();
 
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(_ => true)
+                .AllowCredentials());
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -64,7 +72,7 @@ namespace ExpenseApi
 
             app.UseSwagger().UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Expense API V1");
             });
         }
     }

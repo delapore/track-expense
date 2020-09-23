@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="js/site.js"></script>
+
+    <title>Track Expense</title>
+</head>
+
+<body>
+    <div class="jumbotron text-center" style="margin-bottom:0">
+        <h1>Track Expense</h1>
+        <p>Here you can track your expenses by category</p>
+    </div>
+
+    <div class="container-fluid" style="margin-top:30px">
+        <div class="row">
+            <div class="col-sm-2">
+                <h2>Track Expense</h2>
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#">Transactions</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-sm-7">
+                <p id="counter"></p>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Recipient</th>
+                                <th>Amount</th>
+                                <th>Currency</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenses"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <form action="javascript:void(0);" method="POST">
+                    <input type="hidden" id="add-id">
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label for="add-date">Date:</label>
+                            <input type="date" class="form-control" id="add-date">
+                        </div>
+                        <div class="col form-group">
+                            <label for="add-type">Type:</label>
+                            <select class="form-control" id="add-type">
+                              <option>Food</option>
+                              <option>Drink</option>
+                              <option>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-recipient">Recipient:</label>
+                        <input type="text" class="form-control" placeholder="enter recipient" id="add-recipient">
+                    </div>
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label for="add-amount">Amount:</label>
+                            <input type="text" class="form-control" placeholder="0.0" id="add-amount">
+                        </div>
+                        <div class="col form-group">
+                            <label for="add-currency">Currency:</label>
+                            <select class="form-control" id="add-currency">
+                                <option>CHF</option>
+                                <option>EUR</option>
+                                <option>USD</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="addItem()">Add</button>
+                    <button type="button" class="btn btn-primary" onclick="updateItem()" id="update-btn" style="visibility:hidden">Modify</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        getItems();
+    </script>
+</body>
+
+</html>

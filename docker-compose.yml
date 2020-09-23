@@ -1,6 +1,13 @@
 version: '3.8'
 
 services:
+  web:
+    image: web
+    build:
+      context: .
+      dockerfile: Web/Dockerfile
+    ports:
+      - "80:80"
   expenseapi:
     image: expenseapi
     build:
@@ -9,7 +16,9 @@ services:
     environment:
       - ConnectionString=Server=sqldata;Initial Catalog=ExpenseDb;User Id=sa;Password=Pass@word
     ports:
-      - 5000:5000
+      - "5000:5000"
+    depends_on:
+      - sqldata
   sqldata:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
