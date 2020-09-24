@@ -57,20 +57,22 @@
             </div>
 
             <div class="col-sm-3">
-                <form action="javascript:void(0);" method="POST">
+                <form action="javascript:void(0);" method="POST" class="needs-validation" novalidate>
                     <input type="hidden" id="add-id">
                     <div class="form-row">
                         <div class="col form-group">
                             <label for="add-date">Date:</label>
-                            <input type="date" class="form-control" id="add-date">
+                            <input type="date" class="form-control" id="add-date" required>
+                            <div class="invalid-feedback">Mandatory field.</div>
                         </div>
                         <div class="col form-group">
                             <label for="add-type">Type:</label>
-                            <select class="form-control" id="add-type">
+                            <select class="form-control" id="add-type" required>
                                 <option>Other</option>
                                 <option>Food</option>
-                              <option>Drink</option>
+                                <option>Drink</option>
                             </select>
+                            <div class="invalid-feedback">Mandatory field.</div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -80,19 +82,22 @@
                     <div class="form-row">
                         <div class="col form-group">
                             <label for="add-amount">Amount:</label>
-                            <input type="text" class="form-control" placeholder="0.0" id="add-amount">
+                            <input type="text" class="form-control" placeholder="0.0" id="add-amount" required>
+                            <div class="invalid-feedback">Mandatory field.</div>
                         </div>
                         <div class="col form-group">
                             <label for="add-currency">Currency:</label>
-                            <select class="form-control" id="add-currency">
+                            <select class="form-control" id="add-currency" required>
                                 <option>CHF</option>
                                 <option>EUR</option>
                                 <option>USD</option>
                             </select>
+                            <div class="invalid-feedback">Mandatory field.</div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary" onclick="addItem()">Add</button>
-                    <button type="button" class="btn btn-primary" onclick="updateItem()" id="update-btn" style="visibility:hidden">Modify</button>
+                    <button type="submit" class="btn btn-primary" onclick="addItem()">Add</button>
+                    <button type="submit" class="btn btn-primary" onclick="updateItem()" id="update-btn"
+                        style="visibility:hidden">Modify</button>
                 </form>
             </div>
         </div>
@@ -100,6 +105,23 @@
 
     <script type="text/javascript">
         getItems();
+    </script>
+    <script>
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
     </script>
 </body>
 
