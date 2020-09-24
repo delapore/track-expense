@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using ExpenseApi.Models;
 using System;
 using ExpenseApi.Repository;
-using Microsoft.AspNetCore.Http;
 
 namespace ExpenseApi.Controllers
 {
-    [Route("api/v1/expenses")]
     [ApiController]
+    [Route("api/v1/expenses")]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     public class ExpensesController : ControllerBase
     {
         private readonly IExpenseRepository _repository;
@@ -22,13 +22,10 @@ namespace ExpenseApi.Controllers
 
         // GET: api/v1/expenses
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses() => await _repository.GetExpensesAsync();
 
         // GET: api/Expenses/5
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Expense>> GetExpense(long id)
         {
             var expense = await _repository.GetExpenseByIdAsync(id);
@@ -43,9 +40,6 @@ namespace ExpenseApi.Controllers
 
         // PUT: api/v1/expenses/5
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PutExpense(long id, Expense expense)
         {
             if (id != expense.Id)
@@ -74,7 +68,6 @@ namespace ExpenseApi.Controllers
 
         // POST: api/v1/expenses
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<Expense>> PostExpense(Expense expense)
         {
             await _repository.InsertExpenseAsync(expense);
@@ -83,8 +76,6 @@ namespace ExpenseApi.Controllers
 
         // DELETE: api/v1/expenses/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Expense>> DeleteExpense(long id)
         {
             var expense = await _repository.GetExpenseByIdAsync(id);
