@@ -30,7 +30,9 @@ namespace ExpenseApi.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Currency")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(3)")
+                        .HasMaxLength(3);
 
                     b.Property<string>("Recipient")
                         .HasColumnType("nvarchar(max)");
@@ -44,6 +46,35 @@ namespace ExpenseApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Expenses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Amount = 200.0,
+                            Currency = "CHF",
+                            Recipient = "Stefan",
+                            TransactionDate = new DateTime(2020, 9, 23, 0, 0, 0, 0, DateTimeKind.Local),
+                            Type = 1
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Amount = 300.0,
+                            Currency = "EUR",
+                            Recipient = "Cezary",
+                            TransactionDate = new DateTime(2020, 9, 24, 0, 0, 0, 0, DateTimeKind.Local),
+                            Type = 2
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Amount = 100.0,
+                            Currency = "USD",
+                            Recipient = "Etienne",
+                            TransactionDate = new DateTime(2020, 9, 24, 0, 0, 0, 0, DateTimeKind.Local),
+                            Type = 0
+                        });
                 });
 #pragma warning restore 612, 618
         }

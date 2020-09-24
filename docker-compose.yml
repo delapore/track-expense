@@ -25,4 +25,4 @@ services:
       - SA_PASSWORD=Pass@word
       - ACCEPT_EULA=Y
     ports:
-      - "5434:1433"
+      - "1433:1433"

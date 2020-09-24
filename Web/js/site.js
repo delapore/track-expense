@@ -165,9 +165,9 @@ function _resetExpenseForm()
 {
   document.getElementById('add-id').value = '';
   document.getElementById('add-date').value = '';
-  document.getElementById('add-type').value = '';
+  document.getElementById('add-type').value = 'Other';
   document.getElementById('add-recipient').value = '';
   document.getElementById('add-amount').value = '';
-  document.getElementById('add-currency').value = '';
+  document.getElementById('add-currency').value = 'CHF';
   document.getElementById('update-btn').style.visibility = 'hidden';
 }

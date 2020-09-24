@@ -6,7 +6,7 @@ namespace ExpenseApi.Repository
 {
     public interface IExpenseRepository
     {
-        Task<IEnumerable<Expense>> GetExpensesAsync();
+        Task<List<Expense>> GetExpensesAsync();
         Task<Expense> GetExpenseByIdAsync(long expenseId);
         Task InsertExpenseAsync(Expense expense);
         Task UpdateExpenseAsync(Expense expense);

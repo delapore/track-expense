@@ -31,7 +31,7 @@ namespace ExpenseApi.Repository
             return await _dbContext.Expenses.FindAsync(expenseId);
         }
 
-        public async Task<IEnumerable<Expense>> GetExpensesAsync()
+        public async Task<List<Expense>> GetExpensesAsync()
         {
             return await _dbContext.Expenses.ToListAsync();
         }
