@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ExpenseApi.Controllers;
-using ExpenseApi.Models;
-using ExpenseApi.Repository;
+using ExpenseApi.Domain.Models;
+using ExpenseApi.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -17,8 +17,8 @@ namespace ExpenseApiTests
         [Fact]
         public async Task GetExpensesTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
-            mockRepo.Setup(repo => repo.GetExpensesAsync())
+            var mockRepo = new Mock<IExpenseService>();
+            mockRepo.Setup(repo => repo.ListAsync())
                 .ReturnsAsync(GetTestExpenses());
 
             var controller = new ExpensesController(mockRepo.Object);
@@ -33,8 +33,8 @@ namespace ExpenseApiTests
         [Fact]
         public async Task GetExpenseFromIdTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
-            mockRepo.Setup(repo => repo.GetExpenseByIdAsync(It.IsAny<long>()))
+            var mockRepo = new Mock<IExpenseService>();
+            mockRepo.Setup(repo => repo.DetailAsync(It.IsAny<long>()))
                 .ReturnsAsync(GetTestExpense());
 
             var controller = new ExpensesController(mockRepo.Object);
@@ -49,8 +49,8 @@ namespace ExpenseApiTests
         [Fact]
         public async Task GetExpenseFromNotFoundIdTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
-            mockRepo.Setup(repo => repo.GetExpenseByIdAsync(It.IsAny<long>()))
+            var mockRepo = new Mock<IExpenseService>();
+            mockRepo.Setup(repo => repo.DetailAsync(It.IsAny<long>()))
                 .ReturnsAsync((Expense)null);
 
             var controller = new ExpensesController(mockRepo.Object);
@@ -64,8 +64,8 @@ namespace ExpenseApiTests
         [Fact]
         public async Task PostExpenseTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
-            mockRepo.Setup(repo => repo.InsertExpenseAsync(It.IsAny<Expense>()))
+            var mockRepo = new Mock<IExpenseService>();
+            mockRepo.Setup(repo => repo.CreateAsync(It.IsAny<Expense>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
 
@@ -82,8 +82,8 @@ namespace ExpenseApiTests
         [Fact]
         public async Task PutExpenseTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
-            mockRepo.Setup(repo => repo.UpdateExpenseAsync(It.IsAny<Expense>()))
+            var mockRepo = new Mock<IExpenseService>();
+            mockRepo.Setup(repo => repo.UpdateAsync(It.IsAny<Expense>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
 
@@ -98,7 +98,7 @@ namespace ExpenseApiTests
         [Fact]
         public async Task PutExpenseWrongIdFromBodyTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
+            var mockRepo = new Mock<IExpenseService>();
 
             var controller = new ExpensesController(mockRepo.Object);
 
@@ -110,10 +110,10 @@ namespace ExpenseApiTests
         [Fact]
         public async Task PutExpenseNotFoundIdTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
-            mockRepo.Setup(repo => repo.UpdateExpenseAsync(It.IsAny<Expense>()))
+            var mockRepo = new Mock<IExpenseService>();
+            mockRepo.Setup(repo => repo.UpdateAsync(It.IsAny<Expense>()))
                 .Throws(new DbUpdateConcurrencyException());
-            mockRepo.Setup(repo => repo.ExpenseExists(It.IsAny<long>()))
+            mockRepo.Setup(repo => repo.Exists(It.IsAny<long>()))
                 .Returns(false);
 
             var controller = new ExpensesController(mockRepo.Object);
@@ -126,11 +126,11 @@ namespace ExpenseApiTests
         [Fact]
         public async Task DeleteExpenseTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
-            mockRepo.Setup(repo => repo.DeleteExpenseAsync(It.IsAny<Expense>()))
+            var mockRepo = new Mock<IExpenseService>();
+            mockRepo.Setup(repo => repo.DeleteAsync(It.IsAny<Expense>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
-            mockRepo.Setup(repo => repo.GetExpenseByIdAsync(It.IsAny<long>()))
+            mockRepo.Setup(repo => repo.DetailAsync(It.IsAny<long>()))
                 .ReturnsAsync(GetTestExpense());
 
             var controller = new ExpensesController(mockRepo.Object);
@@ -146,8 +146,8 @@ namespace ExpenseApiTests
         [Fact]
         public async Task DeleteExpenseNotFoundIdTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
-            mockRepo.Setup(repo => repo.GetExpenseByIdAsync(It.IsAny<long>()))
+            var mockRepo = new Mock<IExpenseService>();
+            mockRepo.Setup(repo => repo.DetailAsync(It.IsAny<long>()))
                 .ReturnsAsync((Expense)null);
 
             var controller = new ExpensesController(mockRepo.Object);

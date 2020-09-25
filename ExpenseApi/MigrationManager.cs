@@ -1,4 +1,4 @@
-using ExpenseApi.Models;
+using ExpenseApi.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

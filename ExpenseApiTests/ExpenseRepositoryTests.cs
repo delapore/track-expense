@@ -1,7 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using ExpenseApi.Models;
-using ExpenseApi.Repository;
+using ExpenseApi.Domain.Models;
+using ExpenseApi.Persistence.Contexts;
+using ExpenseApi.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -23,20 +24,20 @@ namespace ExpenseApiTests
         }
 
         [Fact]
-        public async Task GetExpensesAsyncTest()
+        public async Task ListAsyncTest()
         {
             var repository = new ExpenseRepository(GetContext());
 
-            var expenses = await repository.GetExpensesAsync();
+            var expenses = await repository.ListAsync();
             Assert.Equal(3, expenses.Count);
         }
 
         [Fact]
-        public async Task GetExpenseByIdAsyncTest()
+        public async Task DetailAsyncTest()
         {
             var repository = new ExpenseRepository(GetContext());
 
-            var expense = await repository.GetExpenseByIdAsync(1);
+            var expense = await repository.DetailAsync(1);
             Assert.Equal("Stefan", expense.Recipient);
         }
 
@@ -54,11 +55,11 @@ namespace ExpenseApiTests
                 Amount = 123,
                 Currency = "CHF"
             };
-            await repository.InsertExpenseAsync(expense);
+            await repository.CreateAsync(expense);
 
             Assert.NotEqual(0, expense.Id);
 
-            var expenseFromDb = await repository.GetExpenseByIdAsync(expense.Id);
+            var expenseFromDb = await repository.DetailAsync(expense.Id);
 
             Assert.Equal("test recipient", expenseFromDb.Recipient);
         }
@@ -68,14 +69,14 @@ namespace ExpenseApiTests
         {
             var repository = new ExpenseRepository(GetContext());
 
-            var expense = await repository.GetExpenseByIdAsync(1);
+            var expense = await repository.DetailAsync(1);
 
             Assert.Equal("Stefan", expense.Recipient);
 
             expense.Recipient = "Cezary";
-            await repository.UpdateExpenseAsync(expense);
+            await repository.UpdateAsync(expense);
 
-            var newExpense = await repository.GetExpenseByIdAsync(1);
+            var newExpense = await repository.DetailAsync(1);
 
             Assert.Equal("Cezary", newExpense.Recipient);
         }
@@ -85,12 +86,12 @@ namespace ExpenseApiTests
         {
             var repository = new ExpenseRepository(GetContext());
 
-            Assert.True(repository.ExpenseExists(1));
+            Assert.True(repository.Exists(1));
 
-            var expense = await repository.GetExpenseByIdAsync(1);
-            await repository.DeleteExpenseAsync(expense);
+            var expense = await repository.DetailAsync(1);
+            await repository.DeleteAsync(expense);
 
-            Assert.False(repository.ExpenseExists(1));
+            Assert.False(repository.Exists(1));
         }
     }
 }

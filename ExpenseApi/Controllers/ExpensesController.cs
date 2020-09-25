@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ExpenseApi.Models;
+using ExpenseApi.Domain.Models;
 using System;
-using ExpenseApi.Repository;
+using ExpenseApi.Domain.Services;
 
 namespace ExpenseApi.Controllers
 {
@@ -13,22 +13,22 @@ namespace ExpenseApi.Controllers
     [ApiConventionType(typeof(DefaultApiConventions))]
     public class ExpensesController : ControllerBase
     {
-        private readonly IExpenseRepository _repository;
+        private readonly IExpenseService _service;
 
-        public ExpensesController(IExpenseRepository repository)
+        public ExpensesController(IExpenseService service)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
         // GET: api/v1/expenses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses() => await _repository.GetExpensesAsync();
+        public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses() => await _service.ListAsync();
 
         // GET: api/Expenses/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Expense>> GetExpense(long id)
         {
-            var expense = await _repository.GetExpenseByIdAsync(id);
+            var expense = await _service.DetailAsync(id);
 
             if (expense == null)
             {
@@ -49,11 +49,11 @@ namespace ExpenseApi.Controllers
 
             try
             {
-                await _repository.UpdateExpenseAsync(expense);
+                await _service.UpdateAsync(expense);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_repository.ExpenseExists(id))
+                if (!_service.Exists(id))
                 {
                     return NotFound();
                 }
@@ -70,7 +70,7 @@ namespace ExpenseApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Expense>> PostExpense(Expense expense)
         {
-            await _repository.InsertExpenseAsync(expense);
+            await _service.CreateAsync(expense);
             return CreatedAtAction(nameof(GetExpense), new { id = expense.Id }, expense);
         }
 
@@ -78,13 +78,13 @@ namespace ExpenseApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Expense>> DeleteExpense(long id)
         {
-            var expense = await _repository.GetExpenseByIdAsync(id);
+            var expense = await _service.DetailAsync(id);
             if (expense == null)
             {
                 return NotFound();
             }
 
-            await _repository.DeleteExpenseAsync(expense);
+            await _service.DeleteAsync(expense);
 
             return expense;
         }
