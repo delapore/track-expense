@@ -12,6 +12,7 @@ using System.IO;
 using NLog;
 using ExpenseApi.Logger;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace ExpenseApi
 {
@@ -35,6 +36,8 @@ namespace ExpenseApi
             });
 
             services.AddTransient<IExpenseRepository, ExpenseRepository>();
+
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddSwaggerGen(sg =>
             {

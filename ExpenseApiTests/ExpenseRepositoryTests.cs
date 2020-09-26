@@ -43,7 +43,7 @@ namespace ExpenseApiTests
         }
 
         [Fact]
-        public async Task InsertAndGetExpenseAsyncTest()
+        public async Task InsertAndDetailAsyncTest()
         {
             var repository = new ExpenseRepository(GetContext());
 
@@ -66,7 +66,7 @@ namespace ExpenseApiTests
         }
 
         [Fact]
-        public async Task UpdateAndGetExpenseAsyncTest()
+        public async Task UpdateAndDetailAsyncTest()
         {
             var repository = new ExpenseRepository(GetContext());
 
@@ -83,16 +83,15 @@ namespace ExpenseApiTests
         }
 
         [Fact]
-        public async Task DeleteAndExistsExpenseAsyncTest()
+        public async Task DeleteAndDetailAsyncTest()
         {
             var repository = new ExpenseRepository(GetContext());
 
-            Assert.True(repository.Exists(1));
-
             var expense = await repository.DetailAsync(1);
-            await repository.DeleteAsync(expense);
+            Assert.NotNull(expense);
 
-            Assert.False(repository.Exists(1));
+            await repository.DeleteAsync(expense);
+            Assert.Null(await repository.DetailAsync(1));
         }
     }
 }

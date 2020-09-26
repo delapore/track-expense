@@ -68,7 +68,6 @@ function updateItem() {
   const itemId = document.getElementById('add-id').value;
 
   const item = {
-    id: parseInt(itemId, 10),
     transactionDate: document.getElementById('add-date').value,
     type: document.getElementById('add-type').value,
     recipient: document.getElementById('add-recipient').value.trim(),

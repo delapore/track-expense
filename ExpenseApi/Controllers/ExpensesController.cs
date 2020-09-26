@@ -7,6 +7,8 @@ using System;
 using ExpenseApi.Repositories;
 using ExpenseApi.Logger;
 using System.Text.Json;
+using AutoMapper;
+using ExpenseApi.DataTransferObjects;
 
 namespace ExpenseApi.Controllers
 {
@@ -17,23 +19,26 @@ namespace ExpenseApi.Controllers
     {
         private readonly ILoggerManager _logger;
         private readonly IExpenseRepository _repository;
+        private readonly IMapper _mapper;
 
-        public ExpensesController(IExpenseRepository repository, ILoggerManager logger)
+        public ExpensesController(IExpenseRepository repository, ILoggerManager logger, IMapper mapper)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _logger = logger ?? throw new ArgumentNullException(nameof(repository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         // GET: api/v1/expenses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses()
+        public async Task<ActionResult<IEnumerable<ExpenseDto>>> GetExpenses()
         {
             try
             {
                 var expenses = await _repository.ListAsync();
+                var expensesDto = _mapper.Map<IEnumerable<ExpenseDto>>(expenses);
 
                 _logger.LogInfo($"{nameof(GetExpenses)} : return Ok from database.");
-                return Ok(expenses);
+                return Ok(expensesDto);
             }
             catch (Exception ex)
             {
@@ -45,7 +50,7 @@ namespace ExpenseApi.Controllers
 
         // GET: api/Expenses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Expense>> GetExpense(long id)
+        public async Task<ActionResult<ExpenseDto>> GetExpense(long id)
         {
             try
             {
@@ -57,8 +62,10 @@ namespace ExpenseApi.Controllers
                     return NotFound();
                 }
 
+                var expenseDto = _mapper.Map<ExpenseDto>(expense);
+
                 _logger.LogInfo($"{nameof(GetExpense)}({id}) : return Ok from database");
-                return Ok(expense);
+                return Ok(expenseDto);
             }
             catch (Exception ex)
             {
@@ -70,81 +77,71 @@ namespace ExpenseApi.Controllers
 
         // PUT: api/v1/expenses/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutExpense(long id, Expense expense)
-        {
-            try
-            {
-                if (id != expense.Id)
-                {
-                    var message = "Body id field is not the same as parameter id";
-
-                    _logger.LogInfo($"{nameof(PutExpense)}({id}) : return ValidationProblem(\"{message}\") from datanase");
-                    return ValidationProblem(message);
-                }
-
-                try
-                {
-                    await _repository.UpdateAsync(expense);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_repository.Exists(id))
-                    {
-                        _logger.LogInfo($"{nameof(PutExpense)}({id}) : return NotFound from database");
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-
-                _logger.LogInfo($"{nameof(PutExpense)}({id}) : return NoContent from database");
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{nameof(PutExpense)}({id}) : something went wrong with {JsonSerializer.Serialize(expense)}{Environment.NewLine}" +
-                    $"\t{ex.Message}");
-                throw;
-            }
-        }
-
-        // POST: api/v1/expenses
-        [HttpPost]
-        public async Task<ActionResult<Expense>> PostExpense(Expense expense)
-        {
-            try
-            {
-                await _repository.CreateAsync(expense);
-
-                _logger.LogInfo($"{nameof(PostExpense)} : return CreatedAtAction({nameof(GetExpense)}, {expense.Id}) from database");
-
-                return CreatedAtAction(nameof(GetExpense), new { id = expense.Id }, expense);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"{nameof(PostExpense)} : something went wrong with {JsonSerializer.Serialize(expense)}{Environment.NewLine}" +
-                    $"\t{ex.Message}");
-                throw;
-            }
-        }
-
-        // DELETE: api/v1/expenses/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Expense>> DeleteExpense(long id)
+        public async Task<IActionResult> PutExpense(long id, ExpenseForUpdateDto expenseForUpdateDto)
         {
             try
             {
                 var expense = await _repository.DetailAsync(id);
                 if (expense == null)
                 {
+                    _logger.LogInfo($"{nameof(PutExpense)}({id}) : return NotFound from database");
+                    return NotFound();
+                }
+
+                expense = _mapper.Map(expenseForUpdateDto, expense);
+                await _repository.UpdateAsync(expense);
+
+                _logger.LogInfo($"{nameof(PutExpense)}({id}) : return NoContent from database");
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{nameof(PutExpense)}({id}) : something went wrong with {JsonSerializer.Serialize(expenseForUpdateDto)}" +
+                    $"{Environment.NewLine}\t{ex.Message}");
+                throw;
+            }
+        }
+
+        // POST: api/v1/expenses
+        [HttpPost]
+        public async Task<ActionResult<ExpenseDto>> PostExpense(ExpenseForCreationDto expenseForCreationDto)
+        {
+            try
+            {
+                var expense = _mapper.Map<Expense>(expenseForCreationDto);
+                await _repository.CreateAsync(expense);
+
+                var expenseDto = _mapper.Map<ExpenseDto>(expense);
+
+                _logger.LogInfo($"{nameof(PostExpense)} : return CreatedAtAction({nameof(GetExpense)}, {expenseDto.Id}) from database");
+                return CreatedAtAction(nameof(GetExpense), new { id = expenseDto.Id }, expenseDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{nameof(PostExpense)} : something went wrong with {JsonSerializer.Serialize(expenseForCreationDto)}" +
+                    $"{Environment.NewLine}\t{ex.Message}");
+                throw;
+            }
+        }
+
+        // DELETE: api/v1/expenses/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ExpenseDto>> DeleteExpense(long id)
+        {
+            try
+            {
+                var expense = await _repository.DetailAsync(id);
+                if (expense == null)
+                {
+                    _logger.LogInfo($"{nameof(DeleteExpense)}({id}) : return NotFound from database");
                     return NotFound();
                 }
 
                 await _repository.DeleteAsync(expense);
+                var expenseDto = _mapper.Map<ExpenseDto>(expense);
 
-                return Ok(expense);
+                _logger.LogInfo($"{nameof(DeleteExpense)}({id}) : return Ok from database");
+                return Ok(expenseDto);
             }
             catch (Exception ex)
             {

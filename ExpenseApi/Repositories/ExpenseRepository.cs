@@ -22,11 +22,6 @@ namespace ExpenseApi.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public bool Exists(long expenseId)
-        {
-            return _dbContext.Expenses.Any(e => e.Id == expenseId);
-        }
-
         public async Task<Expense> DetailAsync(long expenseId)
         {
             return await _dbContext.Expenses.FindAsync(expenseId);

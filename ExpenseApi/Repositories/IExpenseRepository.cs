@@ -11,6 +11,5 @@ namespace ExpenseApi.Repositories
         Task CreateAsync(Expense expense);
         Task UpdateAsync(Expense expense);
         Task DeleteAsync(Expense expense);
-        bool Exists(long expenseId);
     }
 }
