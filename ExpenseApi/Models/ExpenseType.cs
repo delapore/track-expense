@@ -1,4 +1,4 @@
-namespace ExpenseApi.Domain.Models
+namespace ExpenseApi.Models
 {
     public enum ExpenseType
     {

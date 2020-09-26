@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ExpenseApi.Domain.Models;
-using ExpenseApi.Persistence.Contexts;
-using ExpenseApi.Persistence.Repositories;
+using ExpenseApi.Models;
+using ExpenseApi.Contexts;
+using ExpenseApi.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 

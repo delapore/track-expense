@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ExpenseApi.Domain.Models;
-using ExpenseApi.Domain.Repositories;
-using ExpenseApi.Persistence.Contexts;
+using ExpenseApi.Models;
+using ExpenseApi.Contexts;
 using Microsoft.EntityFrameworkCore;
 
-namespace ExpenseApi.Persistence.Repositories
+namespace ExpenseApi.Repositories
 {
     public class ExpenseRepository : IExpenseRepository
     {

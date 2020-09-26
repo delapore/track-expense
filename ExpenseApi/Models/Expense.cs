@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ExpenseApi.Domain.Models
+namespace ExpenseApi.Models
 {
     public class Expense
     {

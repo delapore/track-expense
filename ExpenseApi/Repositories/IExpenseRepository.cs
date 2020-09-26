@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ExpenseApi.Domain.Models;
+using ExpenseApi.Models;
 
-namespace ExpenseApi.Domain.Repositories
+namespace ExpenseApi.Repositories
 {
     public interface IExpenseRepository
     {

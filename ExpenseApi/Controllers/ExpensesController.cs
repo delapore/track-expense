@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ExpenseApi.Domain.Models;
+using ExpenseApi.Models;
 using System;
-using ExpenseApi.Domain.Repositories;
+using ExpenseApi.Repositories;
 
 namespace ExpenseApi.Controllers
 {

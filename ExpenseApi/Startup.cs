@@ -1,7 +1,6 @@
 using System.Text.Json.Serialization;
-using ExpenseApi.Domain.Repositories;
-using ExpenseApi.Persistence.Contexts;
-using ExpenseApi.Persistence.Repositories;
+using ExpenseApi.Repositories;
+using ExpenseApi.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
