@@ -6,7 +6,7 @@ namespace ExpenseApi.Domain.Services
 {
     public interface IExpenseService
     {
-        Task<List<Expense>> ListAsync();
+        Task<IEnumerable<Expense>> ListAsync();
         Task<Expense> DetailAsync(long expenseId);
         Task CreateAsync(Expense expense);
         Task UpdateAsync(Expense expense);

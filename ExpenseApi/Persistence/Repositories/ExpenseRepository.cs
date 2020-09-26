@@ -33,7 +33,7 @@ namespace ExpenseApi.Persistence.Repositories
             return await _dbContext.Expenses.FindAsync(expenseId);
         }
 
-        public async Task<List<Expense>> ListAsync()
+        public async Task<IEnumerable<Expense>> ListAsync()
         {
             return await _dbContext.Expenses.ToListAsync();
         }

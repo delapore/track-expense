@@ -6,7 +6,7 @@ namespace ExpenseApi.Domain.Repositories
 {
     public interface IExpenseRepository
     {
-        Task<List<Expense>> ListAsync();
+        Task<IEnumerable<Expense>> ListAsync();
         Task<Expense> DetailAsync(long expenseId);
         Task CreateAsync(Expense expense);
         Task UpdateAsync(Expense expense);

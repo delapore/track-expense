@@ -19,7 +19,7 @@ namespace ExpenseApi.Services
         public async Task DeleteAsync(Expense expense) => await _repository.DeleteAsync(expense);
         public async Task<Expense> DetailAsync(long expenseId) => await _repository.DetailAsync(expenseId);
         public bool Exists(long expenseId) => _repository.Exists(expenseId);
-        public async Task<List<Expense>> ListAsync() => await _repository.ListAsync();
+        public async Task<IEnumerable<Expense>> ListAsync() => await _repository.ListAsync();
         public async Task UpdateAsync(Expense expense) => await _repository.UpdateAsync(expense);
     }
 }

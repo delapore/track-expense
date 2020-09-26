@@ -22,7 +22,7 @@ namespace ExpenseApi.Controllers
 
         // GET: api/v1/expenses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses() => await _service.ListAsync();
+        public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses() => Ok(await _service.ListAsync());
 
         // GET: api/Expenses/5
         [HttpGet("{id}")]
@@ -35,7 +35,7 @@ namespace ExpenseApi.Controllers
                 return NotFound();
             }
 
-            return expense;
+            return Ok(expense);
         }
 
         // PUT: api/v1/expenses/5
@@ -86,7 +86,7 @@ namespace ExpenseApi.Controllers
 
             await _service.DeleteAsync(expense);
 
-            return expense;
+            return Ok(expense);
         }
     }
 }

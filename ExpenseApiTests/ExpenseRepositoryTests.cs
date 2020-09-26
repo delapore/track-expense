@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ExpenseApi.Domain.Models;
 using ExpenseApi.Persistence.Contexts;
@@ -29,7 +30,7 @@ namespace ExpenseApiTests
             var repository = new ExpenseRepository(GetContext());
 
             var expenses = await repository.ListAsync();
-            Assert.Equal(3, expenses.Count);
+            Assert.Equal(3, expenses.Count());
         }
 
         [Fact]

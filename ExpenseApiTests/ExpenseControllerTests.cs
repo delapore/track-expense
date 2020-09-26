@@ -25,8 +25,8 @@ namespace ExpenseApiTests
 
             var result = await controller.GetExpenses();
 
-            Assert.Null(result.Result);
-            var model = Assert.IsAssignableFrom<IEnumerable<Expense>>(result.Value);
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var model = Assert.IsAssignableFrom<IEnumerable<Expense>>(okResult.Value);
             Assert.Equal(2, model.Count());
         }
 
@@ -41,8 +41,8 @@ namespace ExpenseApiTests
 
             var result = await controller.GetExpense(1);
 
-            Assert.Null(result.Result);
-            var model = Assert.IsAssignableFrom<Expense>(result.Value);
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var model = Assert.IsAssignableFrom<Expense>(okResult.Value);
             Assert.Equal(3, model.Id);
         }
 
@@ -137,8 +137,8 @@ namespace ExpenseApiTests
 
             var result = await controller.DeleteExpense(3);
 
-            Assert.Null(result.Result);
-            var model = Assert.IsAssignableFrom<Expense>(result.Value);
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var model = Assert.IsAssignableFrom<Expense>(okResult.Value);
             Assert.Equal(3, model.Id);
             mockRepo.Verify();
         }
