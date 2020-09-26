@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ExpenseApi.Controllers;
+using ExpenseApi.Logger;
 using ExpenseApi.Models;
 using ExpenseApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -14,14 +15,20 @@ namespace ExpenseApiTests
 {
     public class ExpenseControllerTests
     {
+        private readonly ILoggerManager _loggerManager;
+        public ExpenseControllerTests()
+        {
+            _loggerManager = new Mock<ILoggerManager>().Object;
+        }
+
         [Fact]
         public async Task GetExpensesTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
+            var mockRepo = new Mock<IExpenseRepository>(MockBehavior.Strict);
             mockRepo.Setup(repo => repo.ListAsync())
                 .ReturnsAsync(GetTestExpenses());
 
-            var controller = new ExpensesController(mockRepo.Object);
+            var controller = new ExpensesController(mockRepo.Object, _loggerManager);
 
             var result = await controller.GetExpenses();
 
@@ -33,11 +40,11 @@ namespace ExpenseApiTests
         [Fact]
         public async Task GetExpenseFromIdTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
+            var mockRepo = new Mock<IExpenseRepository>(MockBehavior.Strict);
             mockRepo.Setup(repo => repo.DetailAsync(It.IsAny<long>()))
                 .ReturnsAsync(GetTestExpense());
 
-            var controller = new ExpensesController(mockRepo.Object);
+            var controller = new ExpensesController(mockRepo.Object, _loggerManager);
 
             var result = await controller.GetExpense(1);
 
@@ -49,11 +56,11 @@ namespace ExpenseApiTests
         [Fact]
         public async Task GetExpenseFromNotFoundIdTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
+            var mockRepo = new Mock<IExpenseRepository>(MockBehavior.Strict);
             mockRepo.Setup(repo => repo.DetailAsync(It.IsAny<long>()))
                 .ReturnsAsync((Expense)null);
 
-            var controller = new ExpensesController(mockRepo.Object);
+            var controller = new ExpensesController(mockRepo.Object, _loggerManager);
 
             var result = await controller.GetExpense(1);
 
@@ -64,12 +71,12 @@ namespace ExpenseApiTests
         [Fact]
         public async Task PostExpenseTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
+            var mockRepo = new Mock<IExpenseRepository>(MockBehavior.Strict);
             mockRepo.Setup(repo => repo.CreateAsync(It.IsAny<Expense>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
 
-            var controller = new ExpensesController(mockRepo.Object);
+            var controller = new ExpensesController(mockRepo.Object, _loggerManager);
 
             var result = await controller.PostExpense(GetTestExpense());
 
@@ -82,12 +89,12 @@ namespace ExpenseApiTests
         [Fact]
         public async Task PutExpenseTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
+            var mockRepo = new Mock<IExpenseRepository>(MockBehavior.Strict);
             mockRepo.Setup(repo => repo.UpdateAsync(It.IsAny<Expense>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
 
-            var controller = new ExpensesController(mockRepo.Object);
+            var controller = new ExpensesController(mockRepo.Object, _loggerManager);
 
             var result = await controller.PutExpense(3, GetTestExpense());
 
@@ -98,9 +105,9 @@ namespace ExpenseApiTests
         [Fact]
         public async Task PutExpenseWrongIdFromBodyTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
+            var mockRepo = new Mock<IExpenseRepository>(MockBehavior.Strict);
 
-            var controller = new ExpensesController(mockRepo.Object);
+            var controller = new ExpensesController(mockRepo.Object, _loggerManager);
 
             // ValidationProblem is returned but because ModelState is null, it throws a null ref exception
             var ex = await Assert.ThrowsAsync<NullReferenceException>(() => controller.PutExpense(1, GetTestExpense()));
@@ -110,13 +117,13 @@ namespace ExpenseApiTests
         [Fact]
         public async Task PutExpenseNotFoundIdTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
+            var mockRepo = new Mock<IExpenseRepository>(MockBehavior.Strict);
             mockRepo.Setup(repo => repo.UpdateAsync(It.IsAny<Expense>()))
                 .Throws(new DbUpdateConcurrencyException());
             mockRepo.Setup(repo => repo.Exists(It.IsAny<long>()))
                 .Returns(false);
 
-            var controller = new ExpensesController(mockRepo.Object);
+            var controller = new ExpensesController(mockRepo.Object, _loggerManager);
 
             var result = await controller.PutExpense(3, GetTestExpense());
 
@@ -126,14 +133,14 @@ namespace ExpenseApiTests
         [Fact]
         public async Task DeleteExpenseTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
+            var mockRepo = new Mock<IExpenseRepository>(MockBehavior.Strict);
             mockRepo.Setup(repo => repo.DeleteAsync(It.IsAny<Expense>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
             mockRepo.Setup(repo => repo.DetailAsync(It.IsAny<long>()))
                 .ReturnsAsync(GetTestExpense());
 
-            var controller = new ExpensesController(mockRepo.Object);
+            var controller = new ExpensesController(mockRepo.Object, _loggerManager);
 
             var result = await controller.DeleteExpense(3);
 
@@ -146,11 +153,11 @@ namespace ExpenseApiTests
         [Fact]
         public async Task DeleteExpenseNotFoundIdTest()
         {
-            var mockRepo = new Mock<IExpenseRepository>();
+            var mockRepo = new Mock<IExpenseRepository>(MockBehavior.Strict);
             mockRepo.Setup(repo => repo.DetailAsync(It.IsAny<long>()))
                 .ReturnsAsync((Expense)null);
 
-            var controller = new ExpensesController(mockRepo.Object);
+            var controller = new ExpensesController(mockRepo.Object, _loggerManager);
 
             var result = await controller.DeleteExpense(3);
 

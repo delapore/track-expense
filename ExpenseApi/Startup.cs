@@ -3,13 +3,15 @@ using ExpenseApi.Repositories;
 using ExpenseApi.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using System.IO;
+using NLog;
+using ExpenseApi.Logger;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseApi
 {
@@ -17,6 +19,7 @@ namespace ExpenseApi
     {
         public Startup(IConfiguration configuration)
         {
+            LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
         }
 
@@ -24,6 +27,8 @@ namespace ExpenseApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<ILoggerManager, LoggerManager>();
+
             services.AddDbContext<ExpenseContext>(c =>
             {
                 c.UseSqlServer(Configuration["ConnectionString"]);
@@ -50,10 +55,12 @@ namespace ExpenseApi
 
             services.PostConfigure((System.Action<ApiBehaviorOptions>)(options =>
             {
+                var builtInFactory = options.InvalidModelStateResponseFactory;
                 options.InvalidModelStateResponseFactory = context =>
                 {
-                    var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Startup>>();
-                    return options.InvalidModelStateResponseFactory(context);
+                    var logger = context.HttpContext.RequestServices.GetRequiredService<ILoggerManager>();
+                    logger.LogModelState(context.ModelState);
+                    return builtInFactory(context);
                 };
             }));
         }
