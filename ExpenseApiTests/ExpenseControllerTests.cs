@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ExpenseApi.Controllers;
 using ExpenseApi.Domain.Models;
-using ExpenseApi.Domain.Services;
+using ExpenseApi.Domain.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -17,7 +17,7 @@ namespace ExpenseApiTests
         [Fact]
         public async Task GetExpensesTest()
         {
-            var mockRepo = new Mock<IExpenseService>();
+            var mockRepo = new Mock<IExpenseRepository>();
             mockRepo.Setup(repo => repo.ListAsync())
                 .ReturnsAsync(GetTestExpenses());
 
@@ -33,7 +33,7 @@ namespace ExpenseApiTests
         [Fact]
         public async Task GetExpenseFromIdTest()
         {
-            var mockRepo = new Mock<IExpenseService>();
+            var mockRepo = new Mock<IExpenseRepository>();
             mockRepo.Setup(repo => repo.DetailAsync(It.IsAny<long>()))
                 .ReturnsAsync(GetTestExpense());
 
@@ -49,7 +49,7 @@ namespace ExpenseApiTests
         [Fact]
         public async Task GetExpenseFromNotFoundIdTest()
         {
-            var mockRepo = new Mock<IExpenseService>();
+            var mockRepo = new Mock<IExpenseRepository>();
             mockRepo.Setup(repo => repo.DetailAsync(It.IsAny<long>()))
                 .ReturnsAsync((Expense)null);
 
@@ -64,7 +64,7 @@ namespace ExpenseApiTests
         [Fact]
         public async Task PostExpenseTest()
         {
-            var mockRepo = new Mock<IExpenseService>();
+            var mockRepo = new Mock<IExpenseRepository>();
             mockRepo.Setup(repo => repo.CreateAsync(It.IsAny<Expense>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
@@ -82,7 +82,7 @@ namespace ExpenseApiTests
         [Fact]
         public async Task PutExpenseTest()
         {
-            var mockRepo = new Mock<IExpenseService>();
+            var mockRepo = new Mock<IExpenseRepository>();
             mockRepo.Setup(repo => repo.UpdateAsync(It.IsAny<Expense>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
@@ -98,7 +98,7 @@ namespace ExpenseApiTests
         [Fact]
         public async Task PutExpenseWrongIdFromBodyTest()
         {
-            var mockRepo = new Mock<IExpenseService>();
+            var mockRepo = new Mock<IExpenseRepository>();
 
             var controller = new ExpensesController(mockRepo.Object);
 
@@ -110,7 +110,7 @@ namespace ExpenseApiTests
         [Fact]
         public async Task PutExpenseNotFoundIdTest()
         {
-            var mockRepo = new Mock<IExpenseService>();
+            var mockRepo = new Mock<IExpenseRepository>();
             mockRepo.Setup(repo => repo.UpdateAsync(It.IsAny<Expense>()))
                 .Throws(new DbUpdateConcurrencyException());
             mockRepo.Setup(repo => repo.Exists(It.IsAny<long>()))
@@ -126,7 +126,7 @@ namespace ExpenseApiTests
         [Fact]
         public async Task DeleteExpenseTest()
         {
-            var mockRepo = new Mock<IExpenseService>();
+            var mockRepo = new Mock<IExpenseRepository>();
             mockRepo.Setup(repo => repo.DeleteAsync(It.IsAny<Expense>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
@@ -146,7 +146,7 @@ namespace ExpenseApiTests
         [Fact]
         public async Task DeleteExpenseNotFoundIdTest()
         {
-            var mockRepo = new Mock<IExpenseService>();
+            var mockRepo = new Mock<IExpenseRepository>();
             mockRepo.Setup(repo => repo.DetailAsync(It.IsAny<long>()))
                 .ReturnsAsync((Expense)null);
 

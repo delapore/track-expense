@@ -1,15 +1,15 @@
 using System.Text.Json.Serialization;
 using ExpenseApi.Domain.Repositories;
-using ExpenseApi.Domain.Services;
 using ExpenseApi.Persistence.Contexts;
 using ExpenseApi.Persistence.Repositories;
-using ExpenseApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace ExpenseApi
@@ -23,7 +23,6 @@ namespace ExpenseApi
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ExpenseContext>(c =>
@@ -32,7 +31,6 @@ namespace ExpenseApi
             });
 
             services.AddTransient<IExpenseRepository, ExpenseRepository>();
-            services.AddTransient<IExpenseService, ExpenseService>();
 
             services.AddSwaggerGen(sg =>
             {
@@ -50,9 +48,17 @@ namespace ExpenseApi
             {
                 opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
+
+            services.PostConfigure((System.Action<ApiBehaviorOptions>)(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Startup>>();
+                    return options.InvalidModelStateResponseFactory(context);
+                };
+            }));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
