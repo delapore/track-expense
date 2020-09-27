@@ -29,7 +29,8 @@ Setup :
 ### User guide
 
 - open http://localhost
-- you are in the main page of Track Expense, you should see a table with some expenses !!!insert print screen!!!
+- you are in the main page of Track Expense, you should see a table with some expenses
+![track-expense web page](https://raw.githubusercontent.com/delapore/track-expense/master/track-expense.png?token=AAESIZ2GOSSJWPWKG6TORUK7OCBQO)
 - add a new expense
   - fill the form on the left part of the page (recipient can be left blank, other fields are mandatory)
   - click `Add` you should see your expense in the expense table
