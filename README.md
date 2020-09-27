@@ -28,9 +28,10 @@ Here you can retrieve, add, modify and delete expenses via a simple and beautifu
 
 ### User guide
 
+[Web Page overview](https://github.com/delapore/track-expense/blob/master/track-expense.png)
+
 - Open http://localhost
 - You are in the main page of Track Expense, you should see a table with some expenses
-![track-expense web page](https://raw.githubusercontent.com/delapore/track-expense/master/track-expense.png?token=AAESIZ2GOSSJWPWKG6TORUK7OCBQO)
 - Add a new expense
   - Fill the form on the left part of the page (recipient can be left blank, other fields are mandatory)
   - Click `Add` you should see your expense in the expense table
