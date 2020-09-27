@@ -23,18 +23,18 @@ namespace ExpenseApi.Contexts
                     Id = 1,
                     TransactionDate = DateTime.Today.AddDays(-1),
                     Type = ExpenseType.Food,
-                    Amount = 200,
+                    Amount = 300,
                     Currency = "CHF",
-                    Recipient = "Stefan"
+                    Recipient = "Alice"
                 },
                 new Expense
                 {
                     Id = 2,
                     TransactionDate = DateTime.Today,
                     Type = ExpenseType.Drink,
-                    Amount = 300,
+                    Amount = 200,
                     Currency = "EUR",
-                    Recipient = "Cezary"
+                    Recipient = "Bob"
                 },
                 new Expense
                 {
@@ -43,7 +43,7 @@ namespace ExpenseApi.Contexts
                     Type = ExpenseType.Other,
                     Amount = 100,
                     Currency = "USD",
-                    Recipient = "Etienne"
+                    Recipient = "Carol"
                 }
             );
         }

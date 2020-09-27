@@ -431,3 +431,7 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+## NLog files
+ExpenseApi/internal_logs
+ExpenseApi/logs

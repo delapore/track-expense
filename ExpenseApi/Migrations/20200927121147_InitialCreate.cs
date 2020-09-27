@@ -27,17 +27,17 @@ namespace ExpenseApi.Migrations
             migrationBuilder.InsertData(
                 table: "Expenses",
                 columns: new[] { "Id", "Amount", "Currency", "Recipient", "TransactionDate", "Type" },
-                values: new object[] { 1L, 200.0, "CHF", "Stefan", new DateTime(2020, 9, 25, 0, 0, 0, 0, DateTimeKind.Local), 1 });
+                values: new object[] { 1L, 300.0, "CHF", "Alice", new DateTime(2020, 9, 26, 0, 0, 0, 0, DateTimeKind.Local), 1 });
 
             migrationBuilder.InsertData(
                 table: "Expenses",
                 columns: new[] { "Id", "Amount", "Currency", "Recipient", "TransactionDate", "Type" },
-                values: new object[] { 2L, 300.0, "EUR", "Cezary", new DateTime(2020, 9, 26, 0, 0, 0, 0, DateTimeKind.Local), 2 });
+                values: new object[] { 2L, 200.0, "EUR", "Bob", new DateTime(2020, 9, 27, 0, 0, 0, 0, DateTimeKind.Local), 2 });
 
             migrationBuilder.InsertData(
                 table: "Expenses",
                 columns: new[] { "Id", "Amount", "Currency", "Recipient", "TransactionDate", "Type" },
-                values: new object[] { 3L, 100.0, "USD", "Etienne", new DateTime(2020, 9, 26, 0, 0, 0, 0, DateTimeKind.Local), 0 });
+                values: new object[] { 3L, 100.0, "USD", "Carol", new DateTime(2020, 9, 27, 0, 0, 0, 0, DateTimeKind.Local), 0 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

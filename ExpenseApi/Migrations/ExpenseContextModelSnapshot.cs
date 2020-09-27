@@ -51,19 +51,19 @@ namespace ExpenseApi.Migrations
                         new
                         {
                             Id = 1L,
-                            Amount = 200.0,
+                            Amount = 300.0,
                             Currency = "CHF",
-                            Recipient = "Stefan",
-                            TransactionDate = new DateTime(2020, 9, 25, 0, 0, 0, 0, DateTimeKind.Local),
+                            Recipient = "Alice",
+                            TransactionDate = new DateTime(2020, 9, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             Type = 1
                         },
                         new
                         {
                             Id = 2L,
-                            Amount = 300.0,
+                            Amount = 200.0,
                             Currency = "EUR",
-                            Recipient = "Cezary",
-                            TransactionDate = new DateTime(2020, 9, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            Recipient = "Bob",
+                            TransactionDate = new DateTime(2020, 9, 27, 0, 0, 0, 0, DateTimeKind.Local),
                             Type = 2
                         },
                         new
@@ -71,8 +71,8 @@ namespace ExpenseApi.Migrations
                             Id = 3L,
                             Amount = 100.0,
                             Currency = "USD",
-                            Recipient = "Etienne",
-                            TransactionDate = new DateTime(2020, 9, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            Recipient = "Carol",
+                            TransactionDate = new DateTime(2020, 9, 27, 0, 0, 0, 0, DateTimeKind.Local),
                             Type = 0
                         });
                 });
