@@ -39,7 +39,7 @@ namespace ExpenseApiTests
             var repository = new ExpenseRepository(GetContext());
 
             var expense = await repository.DetailAsync(1);
-            Assert.Equal("Stefan", expense.Recipient);
+            Assert.Equal("Alice", expense.Recipient);
         }
 
         [Fact]
@@ -72,14 +72,14 @@ namespace ExpenseApiTests
 
             var expense = await repository.DetailAsync(1);
 
-            Assert.Equal("Stefan", expense.Recipient);
+            Assert.Equal("Alice", expense.Recipient);
 
-            expense.Recipient = "Cezary";
+            expense.Recipient = "Bob";
             await repository.UpdateAsync(expense);
 
             var newExpense = await repository.DetailAsync(1);
 
-            Assert.Equal("Cezary", newExpense.Recipient);
+            Assert.Equal("Bob", newExpense.Recipient);
         }
 
         [Fact]
